@@ -1,6 +1,6 @@
 import React, { useEffect, useState, ChangeEvent, FormEvent } from 'react'
 import { Link, useHistory } from 'react-router-dom'
-import { FiArrowLeft } from 'react-icons/fi'
+import { FiArrowLeft, FiCheckCircle } from 'react-icons/fi'
 import { Map, TileLayer, Marker } from 'react-leaflet'
 import { LeafletMouseEvent } from 'leaflet'
 import axios from 'axios'
@@ -39,6 +39,8 @@ const CreatePoint = () => {
   const [selectedItems, setSelectedItems] = useState<number[]>([])
   const [initialPosition, setInitialPosition] = useState<[number, number]>([0, 0])
   const [selectedPosition, setSelectedPosition] = useState<[number, number]>([0, 0])
+
+  const [success, setSuccess] = useState(false)
 
   const history = useHistory()
 
@@ -128,7 +130,7 @@ const CreatePoint = () => {
     }
 
     await api.post('points', data)
-    alert('Ponto de coleta criado!')
+    setSuccess(true)
     setTimeout(() => {
       history.push('/')
     }, 2000)
@@ -250,6 +252,12 @@ const CreatePoint = () => {
           Cadastrar ponto de coleta
         </button>
       </form>
+      {success && (
+        <div className="success">
+          <FiCheckCircle size="55" color="#34cb79" />
+          <span>Cadastro Concluído!</span>
+        </div>
+      )}
     </div>
   )
 }

@@ -201,3 +201,23 @@
   background: #E1FAEC;
   border: 2px solid #34CB79;
 }
+
+.success {
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: #0E0A14ef;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.success span {
+  margin-top: 24px;
+  color: white;
+  font-size: 28px;
+  font-weight: bold;
+}
