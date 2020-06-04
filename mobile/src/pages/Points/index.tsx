@@ -1,13 +1,29 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Image } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import Constants from 'expo-constants'
 import { Feather as Icon } from '@expo/vector-icons'
 import MapView, { Marker } from 'react-native-maps'
 import { SvgUri } from 'react-native-svg'
+import api from '../../services/api'
+
+interface Item {
+  id: number;
+  title: string;
+  image_url: string;
+}
 
 const Points = () => {
   const navigation = useNavigation()
+
+  const [items, setItems] = useState<Item[]>([])
+  const [selectedItems, setSelectedItems] = useState<number[]>([])
+
+  useEffect(() => {
+    api.get('items').then(res => {
+      setItems(res.data)
+    })
+  }, [])
 
   function handleNavigateBack() {
     navigation.goBack()
@@ -15,6 +31,15 @@ const Points = () => {
 
   function handleNavigateToDetail() {
     navigation.navigate('Detail')
+  }
+
+  function handleSelectItem(id: number) {
+    if(selectedItems.includes(id)){
+      const filteredItems = selectedItems.filter(item => item !== id)
+      setSelectedItems(filteredItems)
+    } else {
+      setSelectedItems([...selectedItems, id])
+    }
   }
 
   return (
@@ -25,19 +50,19 @@ const Points = () => {
         </TouchableOpacity>
 
         <Text style={styles.title}>Bem vindo.</Text>
-        <Text style={styles.description}>Encontre um ponto de coleta.</Text>
+        <Text style={styles.description}>Encontre no mapa um ponto de coleta.</Text>
 
         <View style={styles.mapContainer}>
-          <MapView 
-            style={styles.map} 
+          <MapView
+            style={styles.map}
             initialRegion={{
               latitude: -27.1815702,
               longitude: -51.5044965,
               latitudeDelta: 0.04,
               longitudeDelta: 0.04
-            }} 
+            }}
           >
-            <Marker 
+            <Marker
               style={styles.mapMarker}
               onPress={handleNavigateToDetail}
               coordinate={{
@@ -46,7 +71,7 @@ const Points = () => {
               }}
             >
               <View style={styles.mapMarkerContainer}>
-                <Image style={styles.mapMarkerImage} source={{uri: 'https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60'}} />
+                <Image style={styles.mapMarkerImage} source={{ uri: 'https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60' }} />
                 <Text style={styles.mapMarkerTitle}>Mercado</Text>
               </View>
             </Marker>
@@ -54,35 +79,25 @@ const Points = () => {
         </View>
       </View>
       <View style={styles.itemsContainer}>
-        <ScrollView 
-          horizontal 
+        <ScrollView
+          horizontal
           showsHorizontalScrollIndicator={false}
-          contentContainerStyle={{paddingHorizontal: 20}}
+          contentContainerStyle={{ paddingHorizontal: 20 }}
         >
-          <TouchableOpacity style={styles.item}>
-            <SvgUri width={42} height={42} uri="http://192.168.0.103:3333/uploads/papeis-papelao.svg" />
-            <Text style={styles.itemTitle}>Papéis e Papelão</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.item}>
-            <SvgUri width={42} height={42} uri="http://192.168.0.103:3333/uploads/papeis-papelao.svg" />
-            <Text style={styles.itemTitle}>Papéis e Papelão</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.item}>
-            <SvgUri width={42} height={42} uri="http://192.168.0.103:3333/uploads/papeis-papelao.svg" />
-            <Text style={styles.itemTitle}>Papéis e Papelão</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.item}>
-            <SvgUri width={42} height={42} uri="http://192.168.0.103:3333/uploads/papeis-papelao.svg" />
-            <Text style={styles.itemTitle}>Papéis e Papelão</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.item}>
-            <SvgUri width={42} height={42} uri="http://192.168.0.103:3333/uploads/papeis-papelao.svg" />
-            <Text style={styles.itemTitle}>Papéis e Papelão</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.item}>
-            <SvgUri width={42} height={42} uri="http://192.168.0.103:3333/uploads/papeis-papelao.svg" />
-            <Text style={styles.itemTitle}>Papéis e Papelão</Text>
-          </TouchableOpacity>
+          {items.map(item => (
+            <TouchableOpacity 
+              key={String(item.id)}
+              style={[
+                styles.item,
+                selectedItems.includes(item.id) ? styles.selectedItem : {}
+              ]}
+              activeOpacity={0.6}
+              onPress={() => handleSelectItem(item.id)}
+            >
+              <SvgUri width={42} height={42} uri={item.image_url} />
+              <Text style={styles.itemTitle}>{item.title}</Text>
+            </TouchableOpacity>
+          ))}
         </ScrollView>
       </View>
     </>
