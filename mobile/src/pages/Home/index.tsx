@@ -1,14 +1,56 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import { Feather as Icon } from '@expo/vector-icons'
 import { View, Text, ImageBackground, Image, StyleSheet } from 'react-native';
 import { RectButton } from 'react-native-gesture-handler'
 import { useNavigation } from '@react-navigation/native'
+import RNPickerSelect from 'react-native-picker-select'
+import axios from 'axios'
+
+interface IBGEUFResponse {
+  sigla: string;
+}
+
+interface IBGECityResponse {
+  nome: string;
+}
 
 const Home = () => {
+  
+  const [ufs, setUfs] = useState<string[]>([])
+  const [cities, setCities] = useState<string[]>([])
+  const [selectedUf, setSelectedUf] = useState('0')
+  const [selectedCity, setSelectedCity] = useState('0')
+
+  useEffect(() => {
+    axios.get<IBGEUFResponse[]>('https://servicodados.ibge.gov.br/api/v1/localidades/estados')
+      .then(res => {
+        const ufInitials = res.data.map(uf => uf.sigla);
+        setUfs(ufInitials)
+      })
+    }, [])
+
+    useEffect(() => {
+      if (selectedUf === '0') {
+        return;
+      }
+  
+      axios.get<IBGECityResponse[]>(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${selectedUf}/municipios`)
+        .then(res => {
+          const cityNames = res.data.map(city => city.nome)
+          setCities(cityNames)
+        })
+  
+    }, [selectedUf])
+    
   const navigation = useNavigation();
 
   function handleNavigateToPoints() {
-    navigation.navigate('Points')
+    const uf = selectedUf
+    const city = selectedCity
+    navigation.navigate('Points', {
+      uf,
+      city
+    })
   }
 
   return (
@@ -24,6 +66,33 @@ const Home = () => {
       </View>
 
       <View style={styles.footer}>
+        <View style={styles.input}>
+          <RNPickerSelect
+              placeholder={{label: "Selecione um estado"}}
+              value={selectedUf}
+              onValueChange={(value) => setSelectedUf(value)}
+              items={ufs.map(uf => {
+                return {
+                  label: uf,
+                  value: uf
+                }
+              })}
+          />
+        </View>
+        <View style={styles.input}>
+          <RNPickerSelect
+              placeholder={{label: "Selecione uma cidade"}}
+              value={selectedCity}
+              onValueChange={(value) => setSelectedCity(value)}
+              items={cities.map(city => {
+                return {
+                  label: city,
+                  value: city
+                }
+              })}
+          />
+        </View>
+
         <RectButton style={styles.button} onPress={handleNavigateToPoints}>
           <View style={styles.buttonIcon}>
             <Icon name="arrow-right" color="#FFF" size={24} />
@@ -72,8 +141,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFF',
     borderRadius: 10,
     marginBottom: 8,
-    paddingHorizontal: 24,
-    fontSize: 16,
+    paddingVertical: 5
   },
 
   button: {
