@@ -8,11 +8,11 @@
 
 
 <p align="center">
-  <a href="#-nlw">Next Level Week</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+  <a href="#whats-next-level-week">Next Level Week</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
   <a href="#-project">Project</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
-  <a href="#-Technologies">Technologies</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+  <a href="#technologies">Technologies</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
   <a href="#-layout">Layout</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
-  <a href="#-How To Use">How to use</a>
+  <a href="#how-to-use">How to use</a>
 </p>
 
 ## What's Next Level Week?
@@ -42,7 +42,7 @@ This project was developed with the following technologies:
 
 ## 🔖 Layout
 
-To access the layout use [Figma](https://www.figma.com/file/1SxgOMojOB2zYT0Mdk28lB/).
+To access the layout use [Figma](https://www.figma.com/file/9TlOcj6l7D05fZhU12xWT3/Ecoleta-(Booster)).
 
 ## How To Use
 
@@ -50,14 +50,18 @@ To clone and run this application, you'll need [Git](https://git-scm.com), [Node
 
 From your command line:
 
-### Install and run API 
+### Install
 
 ```bash
 # Clone this repository
-$ git clone https://github.com/felipedev1/Next-Level-Week-01-Ecoleta
+$ git clone https://github.com/felipedev1/NLW-01-Booster.git
+```
 
+### Install and run API 
+
+```bash
 # Go into the repository
-$ cd Next-Level-Week-01-Ecoleta/server
+$ cd NLW-01-Booster/server
 
 # Install dependencies
 $ npm install
@@ -74,16 +78,25 @@ $ npm run dev
 ### Install and run Web Frontend
 
 ```bash
-# Clone this repository
-$ git clone https://github.com/felipedev1/Next-Level-Week-01-Ecoleta
-
 # Go into the repository
-$ cd Next-Level-Week-01-Ecoleta/web
+$ cd NLW-01-Booster/web
 
 # Install dependencies
-$ npm install / yarn install
+$ npm install
 
 # Start App
+$ npm start
+```
+### Install and run Mobile App
+
+```bash
+# Go into the repository
+$ cd NLW-1.0/mobile
+
+# Install dependencies
+$ npm install
+
+# Run
 $ npm start
 ```
 
