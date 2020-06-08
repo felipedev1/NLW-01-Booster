@@ -6,6 +6,7 @@ import { Feather as Icon } from '@expo/vector-icons'
 import MapView, { Marker } from 'react-native-maps'
 import { SvgUri } from 'react-native-svg'
 import * as Location from 'expo-location'
+import * as SplashScreen from 'expo-splash-screen'
 import api from '../../services/api'
 
 interface Item {
@@ -45,6 +46,7 @@ const Points = () => {
 
   useEffect(() => {
     async function loadPosition() {
+      await SplashScreen.preventAutoHideAsync();
       const { status } = await Location.requestPermissionsAsync();
 
       if (status !== 'granted') {
@@ -59,6 +61,7 @@ const Points = () => {
         latitude,
         longitude
       ])
+      await SplashScreen.hideAsync();
     }
 
     loadPosition();
@@ -91,6 +94,10 @@ const Points = () => {
     } else {
       setSelectedItems([...selectedItems, id])
     }
+  }
+
+  if(items.length < 1 || (initialPosition[0] === 0)) {
+    return null
   }
 
   return (
